@@ -12,9 +12,10 @@ from unilog import *
 # ---------------------------------------------------------------------------------------------------------------------
 
 class cCommand:
-    def __init__(self, title, function, tldr=None, example=None):
+    def __init__(self, title, function, category="default", tldr=None, example=None):
         self.title      = title
         self.function   = function
+        self.category   = category
         self.tldr       = tldr
         self.example    = example
 
@@ -25,9 +26,9 @@ class cCommand:
 class cPT:
 
     def __init__(self):
-        self.RegisterCommand(cCommand("exit",self.Exit,"Exit the program"))
-        self.RegisterCommand(cCommand("clear",self.Clear,"Clear the screen"))
-        self.RegisterCommand(cCommand("help",self.Help,"Display this menu"))
+        self.RegisterCommand(cCommand("exit",self.Exit,"System","Exit the program"))
+        self.RegisterCommand(cCommand("clear",self.Clear,"System","Clear the screen"))
+        self.RegisterCommand(cCommand("help",self.Help,"System","Display this menu"))
         print(f"{UTIL.CLEAR}")
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -53,8 +54,8 @@ class cPT:
 # ---------------------------------------------------------------------------------------------------------------------
 
     def RegisterCommand(self, command):
-        Log(LVL.INFO, f"Registering Command: {command.title}")
         self.COMMANDS.append(command)
+        self.COMMANDS = sorted(self.COMMANDS, key=lambda COMMAND: COMMAND.category)
 
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -122,6 +123,13 @@ if __name__ == "__main__":
     Log(LVL.INFO, "Running pt in demo mode")
 
     pt = cPT()
+
+    pt.RegisterCommand(cCommand("hello",SayHello,"Test","Say Hello"))
+    pt.RegisterCommand(cCommand("hello",SayHello,"System","Say Hello"))
+
+    for command in pt.COMMANDS:
+        print(f"{command.title}\t{command.category}")
+    exit(1)
     
     while True:
         pt.Prompt()
