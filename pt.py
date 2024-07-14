@@ -68,10 +68,10 @@ class cPT:
 # ---------------------------------------------------------------------------------------------------------------------
 
     def ParseCommand(self, command):
-        print(f"{UTIL.UP}{UTIL.BOLD} >> {UTIL.RESET}{FG.GREEN}{command}{UTIL.RESET}")
         cmd, arg = command, None
         if " " in command:
             cmd, arg = command.split(" ", 1)
+        print(f"{UTIL.UP}{UTIL.BOLD} >> {UTIL.RESET}{FG.GREEN}{cmd}{UTIL.RESET} {arg}")
 
         function = self.SearchCommand(cmd)
 
