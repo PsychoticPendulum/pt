@@ -5,18 +5,17 @@ import sys
 import json
 import readline
 
-from time import sleep
-
 from unilog import *
 
 # ---------------------------------------------------------------------------------------------------------------------
 
 class cCommand:
-    def __init__(self, title, function, category="default", tldr=None, example=None):
+    def __init__(self, title, function, category="default", tldr=None, synopsis=None, example=None):
         self.title      = title
         self.function   = function
         self.category   = category
         self.tldr       = tldr
+        self.synopsis   = synopsis
         self.example    = example
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -26,9 +25,9 @@ class cCommand:
 class cPT:
 
     def __init__(self):
-        self.RegisterCommand(cCommand("exit",self.Exit,"System","Exit the program"))
-        self.RegisterCommand(cCommand("clear",self.Clear,"System","Clear the screen"))
-        self.RegisterCommand(cCommand("help",self.Help,"System","Display this menu"))
+        self.RegisterCommand(cCommand("exit",self.Exit,"System","Exit the program","exit","exit"))
+        self.RegisterCommand(cCommand("clear",self.Clear,"System","Clear the screen","clear","clear"))
+        self.RegisterCommand(cCommand("help",self.Help,"System","Display this menu","help","help"))
         print(f"{UTIL.CLEAR}")
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -62,22 +61,29 @@ class cPT:
     def SearchCommand(self, cmd):
         for command in self.COMMANDS:
             if command.title == cmd:
-                return command.function
+                return command
         return None
 
 # ---------------------------------------------------------------------------------------------------------------------
 
     def ParseCommand(self, command):
-        cmd, arg = command, None
+        cmd, args = command, None
         if " " in command:
-            cmd, arg = command.split(" ", 1)
-        print(f"{UTIL.UP}{UTIL.BOLD} >> {UTIL.RESET}{FG.GREEN}{cmd}{UTIL.RESET} {arg}")
+            cmd, args = command.split(" ", 1)
+        print(f"{UTIL.UP}{UTIL.BOLD} >> {UTIL.RESET}{FG.GREEN}{cmd}{UTIL.RESET} {args}")
 
-        function = self.SearchCommand(cmd)
+        command = self.SearchCommand(cmd)
 
-        if function != None:    function(arg)
-        elif cmd == "":         print(f"{UTIL.UP}{UTIL.CLEARLINE}")
-        else:                   print(f"{UTIL.UP}{UTIL.BOLD} >> {UTIL.RESET}{FG.RED}{command}{UTIL.RESET}")
+        if args != None and args == "?":
+            print(f"{FG.RED} │ {UTIL.RESET}{UTIL.BOLD}Title:          {UTIL.RESET}{command.title}")
+            print(f"{FG.RED} │ {UTIL.RESET}{UTIL.BOLD}TLDR:           {UTIL.RESET}{command.tldr}")
+            print(f"{FG.RED} │ {UTIL.RESET}{UTIL.BOLD}Synopsis:       {UTIL.RESET}{command.synopsis}")
+            print(f"{FG.RED} │ {UTIL.RESET}{UTIL.BOLD}Example:        {UTIL.RESET}{command.example}")
+            return
+
+        if command != None: command.function(args)
+        elif cmd == "":     print(f"{UTIL.UP}{UTIL.CLEARLINE}")
+        else:               print(f"{UTIL.UP}{UTIL.BOLD} >> {UTIL.RESET}{FG.RED}{command}{UTIL.RESET}")
     
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -94,9 +100,9 @@ class cPT:
 
 # ---------------------------------------------------------------------------------------------------------------------
 
-    def Exit(self, exit_code):
+    def Exit(self, args):
         print(f"{UTIL.CLEAR}{UTIL.TOP}",end="")
-        sys.exit(exit_code)
+        sys.exit(args)
 
 # ---------------------------------------------------------------------------------------------------------------------
 

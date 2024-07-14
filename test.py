@@ -11,7 +11,7 @@ def Test(args):
 if __name__ == "__main__":
     pt = cPT()
     pt.RegisterCommand(cCommand("test",Test,"Test","Test0"))
-    pt.RegisterCommand(cCommand("syscall",SysCall,"Local","Run a command on the system"))
+    pt.RegisterCommand(cCommand("syscall",SysCall,"Local","Run a command on the system","syscall <command>","syscall echo Hello World"))
 
     logo = [
         " _____ _____ ____ _____ ____  _   _ ___ _____ _____ ",
