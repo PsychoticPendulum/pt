@@ -120,27 +120,16 @@ class cPT:
                 last    = command.category
             buffer = (16 - len(command.title)) * " "
             print(f"{FG.CYAN} │ {UTIL.RESET}{UTIL.BOLD}{command.title}{UTIL.RESET}{buffer}{command.tldr}{UTIL.RESET}")
-            buffer = (32 - len(command.category)) * sym
         print(f"{FG.CYAN} ╰──────────────────────────────────────{UTIL.RESET}")
 
 # ---------------------------------------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------------------------------------------
 
-def SayHello(args):
-    print("Hello")
-    
 if __name__ == "__main__":
     Log(LVL.INFO, "Running pt in demo mode")
 
     pt = cPT()
 
-    pt.RegisterCommand(cCommand("hello",SayHello,"Test","Say Hello"))
-    pt.RegisterCommand(cCommand("hello",SayHello,"System","Say Hello"))
-
-    for command in pt.COMMANDS:
-        print(f"{command.title}\t{command.category}")
-    exit(1)
-    
     while True:
         pt.Prompt()
