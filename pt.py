@@ -55,7 +55,7 @@ class cPT:
 
     def RegisterCommand(self, command):
         self.COMMANDS.append(command)
-        self.COMMANDS = sorted(self.COMMANDS, key=lambda COMMAND: COMMAND.category)
+        self.COMMANDS = sorted(self.COMMANDS, key=lambda COMMAND: (COMMAND.category != 'System', COMMAND.category))
 
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ class cPT:
         print(f"{UTIL.UP}{UTIL.BOLD} >> {UTIL.RESET}{FG.GREEN}{command}{UTIL.RESET}")
         cmd, arg = command, None
         if " " in command:
-            cmd, arg = command.split(" ")
+            cmd, arg = command.split(" ", 1)
 
         function = self.SearchCommand(cmd)
 
@@ -106,11 +106,22 @@ class cPT:
 # ---------------------------------------------------------------------------------------------------------------------
 
     def Help(self, args):
-        print(f"{FG.CYAN} ╭──────────────────────────────────{UTIL.RESET}")
+        sym     = "─"
+        first   = True
+        last    = ""
         for command in self.COMMANDS:
+            buffer = (32 - len(command.category)) * sym
+            if first:
+                print(f"{FG.CYAN} ╭──── {UTIL.RESET}{UTIL.BOLD}{command.category}{UTIL.RESET}{FG.CYAN} {buffer}{UTIL.RESET}")
+                first   = False
+                last    = command.category
+            elif last != command.category:
+                print(f"{FG.CYAN} ├──── {UTIL.RESET}{UTIL.BOLD}{command.category}{UTIL.RESET}{FG.CYAN} {buffer}{UTIL.RESET}")
+                last    = command.category
             buffer = (16 - len(command.title)) * " "
-            print(f"{FG.CYAN} │ {command.title}{buffer}{command.tldr}{UTIL.RESET}")
-        print(f"{FG.CYAN} ╰──────────────────────────────────{UTIL.RESET}")
+            print(f"{FG.CYAN} │ {UTIL.RESET}{UTIL.BOLD}{command.title}{UTIL.RESET}{buffer}{command.tldr}{UTIL.RESET}")
+            buffer = (32 - len(command.category)) * sym
+        print(f"{FG.CYAN} ╰──────────────────────────────────────{UTIL.RESET}")
 
 # ---------------------------------------------------------------------------------------------------------------------
 # ---------------------------------------------------------------------------------------------------------------------

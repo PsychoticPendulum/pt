@@ -10,15 +10,19 @@ def Test(args):
 
 if __name__ == "__main__":
     pt = cPT()
-    pt.RegisterCommand(cCommand("test",Test,"Test"))
-    pt.RegisterCommand(cCommand("syscall",SysCall,"Run a command on the system"))
+    pt.RegisterCommand(cCommand("test",Test,"Test","Test0"))
+    pt.RegisterCommand(cCommand("test",Test,"Test","Test1"))
+    pt.RegisterCommand(cCommand("test",Test,"Test","Test2"))
+    pt.RegisterCommand(cCommand("test",Test,"Test","Test3"))
+    pt.RegisterCommand(cCommand("syscall",SysCall,"Local","Run a command on the system"))
 
     logo = [
-        " __  __  ____ ____ ",
-        "|  \/  |/ ___/ ___|",
-        "| |\/| | |  | |    ",
-        "| |  | | |__| |___ ",
-        "|_|  |_|\____\____|"
+        " _____ _____ ____ _____ ____  _   _ ___ _____ _____ ",
+        "|_   _| ____/ ___|_   _/ ___|| | | |_ _|_   _| ____|",
+        "  | | |  _| \___ \ | | \___ \| | | || |  | | |  _|  ",
+        "  | | | |___ ___) || |  ___) | |_| || |  | | | |___ ",
+        "  |_| |_____|____/ |_| |____/ \___/|___| |_| |_____|"
+
     ]
 
     pt.SetLogo(logo)
