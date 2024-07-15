@@ -24,23 +24,44 @@ class cCommand:
 
 class cPT:
 
-    def __init__(self):
+    def __init__(self, dev, date, major, minor, patch):
+        self.DEV    = dev
+        self.DATE   = date
+        self.MAJOR  = major
+        self.MINOR  = minor
+        self.PATCH  = patch
+
         self.RegisterCommand(cCommand("exit",self.Exit,"System","Exit the program","exit","exit"))
         self.RegisterCommand(cCommand("clear",self.Clear,"System","Clear the screen","clear","clear"))
         self.RegisterCommand(cCommand("help",self.Help,"System","Display this menu","help","help"))
+        self.RegisterCommand(cCommand("credits",self.Credits,"System","Display credits","credits","credits"))
+
         print(f"{UTIL.CLEAR}")
 
 # ---------------------------------------------------------------------------------------------------------------------
 
-    COMMANDS = []
+    DEV         = None
+    DATE        = None
+    MAJOR       = None
+    MINOR       = None
+    PATCH       = None
+    HEADER      = None
+    COMMANDS    = []
     LOGO = [
-        f"       _    ",
-        f" _ __ | |_  ",
-        f"| '_ \\| __|",
-        f"| |_) | |_  ",
-        f"| .__/ \\__|",
-        f"|_|         "
+        "██████╗ ████████╗",
+        "██╔══██╗╚══██╔══╝",
+        "██████╔╝   ██║   ",
+        "██╔═══╝    ██║   ",
+        "██║        ██║   ",
+        "╚═╝        ╚═╝   "
     ]
+
+# ---------------------------------------------------------------------------------------------------------------------
+
+    def Credits(self, args):
+        print(f"{FG.YELLOW} │ {UTIL.RESET}{UTIL.BOLD}Dev:            {UTIL.RESET}{self.DEV}")
+        print(f"{FG.YELLOW} │ {UTIL.RESET}{UTIL.BOLD}Date:           {UTIL.RESET}{self.DATE}")
+        print(f"{FG.YELLOW} │ {UTIL.RESET}{UTIL.BOLD}Version:        {UTIL.RESET}v{self.MAJOR}.{self.MINOR}:{self.PATCH}")
 
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -70,7 +91,7 @@ class cPT:
         cmd, args = command, None
         if " " in command:
             cmd, args = command.split(" ", 1)
-        print(f"{UTIL.UP}{UTIL.BOLD} >> {UTIL.RESET}{FG.GREEN}{cmd}{UTIL.RESET} {args}")
+        print(f"{UTIL.UP}{UTIL.BOLD} >> {UTIL.RESET}{FG.GREEN}{cmd}{UTIL.RESET}")
 
         command = self.SearchCommand(cmd)
 
@@ -83,7 +104,7 @@ class cPT:
 
         if command != None: command.function(args)
         elif cmd == "":     print(f"{UTIL.UP}{UTIL.CLEARLINE}")
-        else:               print(f"{UTIL.UP}{UTIL.BOLD} >> {UTIL.RESET}{FG.RED}{command}{UTIL.RESET}")
+        else:               print(f"{UTIL.UP}{UTIL.BOLD} >> {UTIL.RESET}{FG.RED}{cmd}{UTIL.RESET}")
     
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -91,6 +112,9 @@ class cPT:
         print(f"{UTIL.TOP}",end="")
         for line in self.LOGO:
             print(f"{UTIL.CLEARLINE}{UTIL.BOLD}{FG.BLUE} {line}{UTIL.RESET}")
+        buffer = (len(self.LOGO[0]) + 1) * UTIL.RIGHT
+        print(f"{UTIL.UP}{UTIL.UP}{UTIL.UP}{buffer}v{self.MAJOR}.{self.MINOR}:{self.PATCH}")
+        print(f"{buffer}by {self.DEV} ({self.DATE})")
 
         for i in range(os.get_terminal_size().lines - len(self.LOGO)):
             print(f"{UTIL.DOWN}",end="")
@@ -133,9 +157,6 @@ class cPT:
 # ---------------------------------------------------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    Log(LVL.INFO, "Running pt in demo mode")
-
-    pt = cPT()
-
+    pt = cPT("luks","2024-07-15","1","0","a")
     while True:
         pt.Prompt()
