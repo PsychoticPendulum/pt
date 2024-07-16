@@ -7,7 +7,12 @@ def SysCall(args):
     os.system(args)
 
 def Test(args):
-    print("Test")
+    print("  /\\_/\\  (")
+    print(" ( ^.^ ) _)")
+    print("   \\\"/  (")
+    print(" ( | | )")
+    print("(__d b__)")
+
 
 if __name__ == "__main__":
     pt = cPT("luks","2024-07-15","1","0","a")
