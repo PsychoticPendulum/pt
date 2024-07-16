@@ -9,6 +9,11 @@ from unilog import *
 
 # ---------------------------------------------------------------------------------------------------------------------
 
+class EncodingError(Exception):
+    pass
+
+# ---------------------------------------------------------------------------------------------------------------------
+
 class cCommand:
     def __init__(self, title, function, category="default", tldr=None, synopsis=None, example=None):
         self.title      = title
@@ -18,13 +23,13 @@ class cCommand:
         self.synopsis   = synopsis
         self.example    = example
 
-# ---------------------------------------------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------------------------------------------
+# =====================================================================================================================
+# =====================================================================================================================
+# =====================================================================================================================
 
 class cPT:
 
-    def __init__(self, dev, date, major, minor, patch):
+    def __init__(self, dev="luks", date="1997-08-09", major="1", minor="0", patch="a", config=None, cache=None):
         self.DEV    = dev
         self.DATE   = date
         self.MAJOR  = major
@@ -36,10 +41,16 @@ class cPT:
         self.RegisterCommand(cCommand("help",self.Help,"System","Display this menu","help","help"))
         self.RegisterCommand(cCommand("credits",self.Credits,"System","Display credits","credits","credits"))
 
+        basename = (os.path.basename(sys.argv[0]).split(".")[0])
+        self.CACHEDIR   = cache if cache != None else basename
+        self.CONFDIR    = config if config != None else basename
+
         print(f"{UTIL.CLEAR}")
 
 # ---------------------------------------------------------------------------------------------------------------------
 
+    CONFDIR     = "/home/<user>/.config/<name>"
+    CACHEDIR    = "/home/<user>/.cache/<name>"
     DEV         = None
     DATE        = None
     MAJOR       = None
@@ -152,11 +163,56 @@ class cPT:
             print(f"{FG.CYAN} │ {UTIL.RESET}{UTIL.BOLD}{command.title}{UTIL.RESET}{buffer}{command.tldr}{UTIL.RESET}")
         print(f"{FG.CYAN} ╰──────────────────────────────────────{UTIL.RESET}")
 
-# ---------------------------------------------------------------------------------------------------------------------
-# ---------------------------------------------------------------------------------------------------------------------
+# =====================================================================================================================
+# =====================================================================================================================
+# =====================================================================================================================
+
+def GetEncoding(file_path):
+    with open(file_path, "rb") as f:
+        raw_data = f.read()
+    result = chardet.detect(raw_data)
+    return result['encoding']
+
 # ---------------------------------------------------------------------------------------------------------------------
 
+def ParseFile(file):
+    valid_encodings = ["utf-8", "ascii"]
+    try:
+        encoding = get_encoding(file_path)
+        if encoding not in valid_encodings:
+            raise EncodingError(f"Unsupported encoding: {encoding}")
+        
+        with open(file_path, "r", encoding=encoding) as file:
+            if not file.readable():
+                raise IOError("File cannot be read.")
+            content = file.read()
+            return content
+
+    except FileNotFoundError:
+        print(f"No such file: {file_path}")
+        exit(2)
+    except PermissionError:
+        print(f"Insufficient permissions to read file: {file_path}")
+        exit(3)
+    except UnicodeDecodeError:
+        print(f"File is not a valid UTF-8 or ASCII encoded text file: {file_path}")
+        exit(4)
+    except EncodingError as e:
+        print(f"{e} Please use a valid encoding.")
+        print(f"Valid encodings: {valid_encodings}")
+        exit(5)
+    except IOError as e:
+        print(f"IO error: {e}")
+        exit(6)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        exit(99)
+
+# =====================================================================================================================
+# =====================================================================================================================
+# =====================================================================================================================
+
 if __name__ == "__main__":
-    pt = cPT("luks","2024-07-15","1","0","a")
+    pt = cPT()
     while True:
         pt.Prompt()
