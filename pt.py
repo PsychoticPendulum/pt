@@ -175,6 +175,15 @@ def GetEncoding(file_path):
 
 # ---------------------------------------------------------------------------------------------------------------------
 
+def CreateFileIfNotExists(filepath, filename):
+     if not os.path.exists(filepath):
+        os.makedirs(filepath)
+
+    if not os.path.isfile(full_path):
+        with open(full_path, 'w') as file:
+            print(f"File created at {full_path}")
+
+
 def ParseFile(file):
     valid_encodings = ["utf-8", "ascii"]
     try:
