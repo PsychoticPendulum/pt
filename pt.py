@@ -3,6 +3,7 @@
 import os
 import sys
 import json
+import chardet
 import readline
 
 from unilog import *
@@ -29,7 +30,7 @@ class cCommand:
 
 class cPT:
 
-    def __init__(self, dev="luks", date="1997-08-09", major="1", minor="0", patch="a", config=None, cache=None):
+    def __init__(self, dev="luks", date="1997-08-09", major="1", minor="1", patch="c", config=None, cache=None):
         self.DEV    = dev
         self.DATE   = date
         self.MAJOR  = major
@@ -167,55 +168,55 @@ class cPT:
 # =====================================================================================================================
 # =====================================================================================================================
 
-def GetEncoding(file_path):
-    with open(file_path, "rb") as f:
-        raw_data = f.read()
-    result = chardet.detect(raw_data)
-    return result['encoding']
-
+    def GetEncoding(self, file_path):
+        with open(file_path, "rb") as f:
+            raw_data = f.read()
+        result = chardet.detect(raw_data)
+        return result['encoding']
+    
 # ---------------------------------------------------------------------------------------------------------------------
-
-def CreateFileIfNotExists(filepath, filename):
-    if not os.path.exists(filepath):
-        os.makedirs(filepath)
-    if not os.path.isfile(full_path):
-        with open(full_path, 'w') as file:
-            print(f"File created at {full_path}")
-
+    
+    def CreateFileIfNotExists(self, filepath, filename):
+        if not os.path.exists(filepath):
+            os.makedirs(filepath)
+        if not os.path.isfile(full_path):
+            with open(full_path, 'w') as file:
+                print(f"File created at {full_path}")
+    
 # ---------------------------------------------------------------------------------------------------------------------
-
-def ParseFile(file):
-    valid_encodings = ["utf-8", "ascii"]
-    try:
-        encoding = get_encoding(file_path)
-        if encoding not in valid_encodings:
-            raise EncodingError(f"Unsupported encoding: {encoding}")
-        
-        with open(file_path, "r", encoding=encoding) as file:
-            if not file.readable():
-                raise IOError("File cannot be read.")
-            content = file.read()
-            return content
-
-    except FileNotFoundError:
-        print(f"No such file: {file_path}")
-        exit(2)
-    except PermissionError:
-        print(f"Insufficient permissions to read file: {file_path}")
-        exit(3)
-    except UnicodeDecodeError:
-        print(f"File is not a valid UTF-8 or ASCII encoded text file: {file_path}")
-        exit(4)
-    except EncodingError as e:
-        print(f"{e} Please use a valid encoding.")
-        print(f"Valid encodings: {valid_encodings}")
-        exit(5)
-    except IOError as e:
-        print(f"IO error: {e}")
-        exit(6)
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        exit(99)
+    
+    def ParseFile(self, file_path):
+        valid_encodings = ["utf-8", "ascii"]
+        try:
+            encoding = self.GetEncoding(file_path)
+            if encoding not in valid_encodings:
+                raise EncodingError(f"Unsupported encoding: {encoding}")
+            
+            with open(file_path, "r", encoding=encoding) as file:
+                if not file.readable():
+                    raise IOError("File cannot be read.")
+                content = file.read()
+                return content
+    
+        except FileNotFoundError:
+            print(f"No such file: {file_path}")
+            exit(2)
+        except PermissionError:
+            print(f"Insufficient permissions to read file: {file_path}")
+            exit(3)
+        except UnicodeDecodeError:
+            print(f"File is not a valid UTF-8 or ASCII encoded text file: {file_path}")
+            exit(4)
+        except EncodingError as e:
+            print(f"{e} Please use a valid encoding.")
+            print(f"Valid encodings: {valid_encodings}")
+            exit(5)
+        except IOError as e:
+            print(f"IO error: {e}")
+            exit(6)
+        except Exception as e:
+            print(f"An unexpected error occurred: {e}")
+            exit(99)
 
 # =====================================================================================================================
 # =====================================================================================================================
