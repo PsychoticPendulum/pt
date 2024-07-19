@@ -30,7 +30,7 @@ class cCommand:
 
 class cPT:
 
-    def __init__(self, dev="luks", date="1997-08-09", major="1", minor="1", patch="c", config=None, cache=None):
+    def __init__(self, dev="luks", date="1997-08-09", major="1", minor="2", patch="c", config=None, cache=None):
         self.DEV    = dev
         self.DATE   = date
         self.MAJOR  = major
@@ -70,10 +70,22 @@ class cPT:
 
 # ---------------------------------------------------------------------------------------------------------------------
 
+    def ListStuff(self, color, content):
+        try:
+            for item in content:
+                buffer = (17 - len(item[0])) * " "
+                print(f"{color} │ {UTIL.RESET}{UTIL.BOLD}{item[0]}:{buffer}{UTIL.RESET}{item[1]}")
+        except:
+            print(" sheesh")
+
+# ---------------------------------------------------------------------------------------------------------------------
+
     def Credits(self, args):
-        print(f"{FG.YELLOW} │ {UTIL.RESET}{UTIL.BOLD}Dev:            {UTIL.RESET}{self.DEV}")
-        print(f"{FG.YELLOW} │ {UTIL.RESET}{UTIL.BOLD}Date:           {UTIL.RESET}{self.DATE}")
-        print(f"{FG.YELLOW} │ {UTIL.RESET}{UTIL.BOLD}Version:        {UTIL.RESET}v{self.MAJOR}.{self.MINOR}:{self.PATCH}")
+        content = []
+        content.append(["Dev",self.DEV])
+        content.append(["Date",self.DATE])
+        content.append(["Dev",f"v{self.MAJOR}.{self.MINOR}:{self.PATCH}"])
+        self.ListStuff(FG.CYAN, content)
 
 # ---------------------------------------------------------------------------------------------------------------------
 
@@ -108,10 +120,12 @@ class cPT:
         command = self.SearchCommand(cmd)
 
         if args != None and args == "?":
-            print(f"{FG.RED} │ {UTIL.RESET}{UTIL.BOLD}Title:          {UTIL.RESET}{command.title}")
-            print(f"{FG.RED} │ {UTIL.RESET}{UTIL.BOLD}TLDR:           {UTIL.RESET}{command.tldr}")
-            print(f"{FG.RED} │ {UTIL.RESET}{UTIL.BOLD}Synopsis:       {UTIL.RESET}{command.synopsis}")
-            print(f"{FG.RED} │ {UTIL.RESET}{UTIL.BOLD}Example:        {UTIL.RESET}{command.example}")
+            content = []
+            content.append(["Title",command.title])
+            content.append(["TLDR",command.tldr])
+            content.append(["Synopsis",command.synopsis])
+            content.append(["Example",command.example])
+            self.ListStuff(FG.YELLOW, content)
             return
 
         if command != None: command.function(args)
@@ -164,9 +178,7 @@ class cPT:
             print(f"{FG.CYAN} │ {UTIL.RESET}{UTIL.BOLD}{command.title}{UTIL.RESET}{buffer}{command.tldr}{UTIL.RESET}")
         print(f"{FG.CYAN} ╰──────────────────────────────────────{UTIL.RESET}")
 
-# =====================================================================================================================
-# =====================================================================================================================
-# =====================================================================================================================
+# ---------------------------------------------------------------------------------------------------------------------
 
     def GetEncoding(self, file_path):
         with open(file_path, "rb") as f:
