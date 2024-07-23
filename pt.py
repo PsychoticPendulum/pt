@@ -8,6 +8,9 @@ import readline
 
 from unilog import *
 
+from prompt_toolkit import prompt
+from prompt_toolkit.completion import FuzzyWordCompleter
+
 # ---------------------------------------------------------------------------------------------------------------------
 
 class EncodingError(Exception):
@@ -30,7 +33,7 @@ class cCommand:
 
 class cPT:
 
-    def __init__(self, dev="luks", date="1997-08-09", major="1", minor="2", patch="c", config=None, cache=None):
+    def __init__(self, dev="luks", date="1997-08-09", major="1", minor="4", patch="c", config=None, cache=None):
         self.DEV    = dev
         self.DATE   = date
         self.MAJOR  = major
@@ -77,6 +80,15 @@ class cPT:
                 print(f"{color} │ {UTIL.RESET}{UTIL.BOLD}{item[0]}:{buffer}{UTIL.RESET}{item[1]}")
         except:
             print(" sheesh")
+
+# ---------------------------------------------------------------------------------------------------------------------
+
+    def SelectItem(self, items):
+        if type(items) != list or items == None:
+            return None
+        completer   = FuzzyWordCompleter(items)
+        item        = prompt(f" Select Item (tab to show all): ", completer=completer)
+        return item
 
 # ---------------------------------------------------------------------------------------------------------------------
 
