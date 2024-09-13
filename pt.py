@@ -33,7 +33,7 @@ class cCommand:
 
 class cPT:
 
-    def __init__(self, dev="luks", date="1997-08-09", major="1", minor="4", patch="c", config=None, cache=None):
+    def __init__(self, dev="luks", date="1997-08-09", major="1", minor="4", patch="d", config=None, cache=None):
         self.DEV    = dev
         self.DATE   = date
         self.MAJOR  = major
@@ -147,7 +147,7 @@ class cPT:
 # ---------------------------------------------------------------------------------------------------------------------
 
     def Prompt(self):
-        print(f"{UTIL.TOP}",end="")
+        print(f"{UTIL.TOP}")
         for line in self.LOGO:
             print(f"{UTIL.CLEARLINE}{UTIL.BOLD}{FG.BLUE} {line}{UTIL.RESET}")
         buffer = (len(self.LOGO[0]) + 1) * UTIL.RIGHT
